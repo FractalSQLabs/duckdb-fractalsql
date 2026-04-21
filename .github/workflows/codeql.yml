@@ -1,0 +1,45 @@
+name: CodeQL
+
+# DuckDB extensions are built via DuckDB's complex out-of-tree CMake
+# flow that downloads DuckDB sources per-version. Autobuild on the
+# runner without that pipeline wired up will not succeed, so we use
+# build-mode: none and rely on CodeQL's source-only analysis for C++
+# — still catches the bulk of interesting issues (tainted inputs,
+# buffer overflows on literal arrays, iterator invalidation).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '43 3 * * 1'
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+jobs:
+  analyze:
+    name: Analyze ${{ matrix.language }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [c-cpp, actions]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: none
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"

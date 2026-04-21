@@ -1,0 +1,36 @@
+# CMake / build output
+build/
+cmake-build*/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile.cmake
+
+# NOTE: include/sfs_core_bc.h is a tracked source file
+# (pre-compiled LuaJIT bytecode). Do not add it to this list.
+
+# Build artifacts
+*.o
+*.a
+*.so
+*.dylib
+*.duckdb_extension
+fractalsql.duckdb_extension
+
+# Build output trees
+dist/
+
+# Packaging temp files
+*.zip
+
+# DuckDB bundle extracted during configure
+libduckdb/
+*.duckdb
+
+# Editor / OS cruft
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
